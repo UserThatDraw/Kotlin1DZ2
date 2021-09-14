@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clickBtn(photos: ArrayList<String>) {
+
         binding.addBtn.setOnClickListener{
             val image = binding?.editTxt?.text.toString().trim()
             photos.add(image)
