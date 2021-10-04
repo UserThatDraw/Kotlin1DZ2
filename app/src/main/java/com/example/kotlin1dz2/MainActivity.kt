@@ -2,54 +2,43 @@ package com.example.kotlin1dz2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.example.kotlin1dz2.databinding.ActivityMainBinding
 import com.squareup.picasso.Picasso
-import kotlin.random.Random
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val photos = arrayListOf(
-            getString(R.string.pic1),
-            getString(R.string.pic2),
-            getString(R.string.pic3),
-            getString(R.string.pic4),
-            getString(R.string.pic5))
-
+        viewModel.initialize()
         initView()
-        clickBtn(photos)
+        clickBtn()
     }
 
-    private fun clickBtn(photos: ArrayList<String>) {
-
-        binding.addBtn.setOnClickListener{
-            val image = binding?.editTxt?.text.toString().trim()
-            photos.add(image)
+    private fun clickBtn() {
+        binding.addBtn.setOnClickListener {
+            viewModel.addList(binding.editTxt.text.toString())
+            binding.editTxt.setText("")
         }
 
-        binding.randomBtn.setOnClickListener{
-            val randomIndex = Random(1).nextInt(photos.size)
-            setImage(photos[randomIndex])
+        binding.randomBtn.setOnClickListener {
+            setImage(viewModel.getImage())
         }
     }
 
     private fun initView() {
-
-        val url = getString(R.string.pic_test)
-
-        setImage(url)
+        setImage(getString(R.string.pic_test))
     }
 
     private fun setImage(url: String) {
         Picasso.get().load(url)
-            .error(R.drawable.ic_launcher_background)
-            .placeholder(R.drawable.ic_launcher_foreground)
             .resize(100, 100)
             .centerCrop()
             .into(binding.piked)
